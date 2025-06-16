@@ -19,17 +19,8 @@ import Card from './Card.vue';
 // Game state from parent
 const { attempts, gameTime, gameCompleted } = inject('gameState');
 
-// Card emojis array - colorful and distinct emoji set
-const cardEmojis = [
-  { id: '1', content: '🐶' }, // Dog
-  { id: '2', content: '🐱' }, // Cat
-  { id: '3', content: '🐼' }, // Panda
-  { id: '4', content: '🦊' }, // Fox
-  { id: '5', content: '🦄' }, // Unicorn
-  { id: '6', content: '🦋' }, // Butterfly
-  { id: '7', content: '🐢' }, // Turtle
-  { id: '8', content: '🐬' }  // Dolphin
-];
+// Card images/icons (could be replaced with actual images)
+const cardTypes = ['🍎', '🍊', '🍋', '🍓', '🍇', '🍒', '🥝', '🍍'];
 
 // Game state
 const cards = ref([]);
@@ -46,13 +37,13 @@ onMounted(() => {
 // Generate and shuffle cards
 const initializeGame = () => {
   // Create pairs of cards
-  const cardPairs = [...cardEmojis, ...cardEmojis];
+  const cardPairs = [...cardTypes, ...cardTypes];
   
   // Shuffle the cards
-  cards.value = shuffleArray(cardPairs).map((card, index) => ({
+  cards.value = shuffleArray(cardPairs).map((content, index) => ({
     id: index,
-    matchId: card.id,
-    content: card.content
+    content,
+    matched: false
   }));
   
   // Reset game state
@@ -96,7 +87,7 @@ const flipCard = (index) => {
     attempts.value++;
     
     // Check if cards match
-    if (cards.value[firstIndex].matchId === cards.value[secondIndex].matchId) {
+    if (cards.value[firstIndex].content === cards.value[secondIndex].content) {
       matchedCards.value.push(firstIndex, secondIndex);
       flippedCards.value = [];
       
